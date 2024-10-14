@@ -1,16 +1,18 @@
-from src.data_processing import process_data
 from src.database import connect_db, create_tables, insert_data
 from src.cleaning import cleaning_data
-from src.queries import get_films_by_certificate, get_directors_with_multiple_high_rating_films, get_profitable_films, get_month_with_most_films, get_top_5_films_per_month
+from src.queries import *
+import pandas as pd
 
 def main():
+    
     cleaning_data()
     
-    df = process_data()
-    
+    df = pd.read_csv('./data/clean_movies.csv')
     conn = connect_db()
     
     create_tables(conn)
+    # # print(df)
+    # # conn.close()
     insert_data(conn, df)
     
     print("Film berdasarkan sertifikasi:")
@@ -27,6 +29,7 @@ def main():
     
     print("Top 5 film per bulan:")
     print(get_top_5_films_per_month(conn))
+    conn.close()
 
 if __name__ == "__main__":
     main()
